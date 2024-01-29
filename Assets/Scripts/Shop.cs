@@ -6,6 +6,12 @@ using System;
 
 public class Shop : MonoBehaviour
 {
+    [Header("Colors")]
+    [SerializeField] Color maxColor = Color.black;
+    [SerializeField] Color toExpenciveColor = Color.red;
+    [SerializeField] Color canAffordColor = Color.green;
+
+    [Header("Upgrades")]
     [SerializeField] Upgrades[] upgrades;
 
     [System.Serializable]
@@ -16,11 +22,14 @@ public class Shop : MonoBehaviour
 
         [Space]
 
-        public string[] titles;
+        public string title;
+        public string[] descriptions;
+
         public long price;
         public int priceMultiplier;
+
         public int maxLevel;
-        [NonSerialized] public int curerntLevel;
+        public int currentLevel;
 
         [Space]
 
@@ -32,9 +41,9 @@ public class Shop : MonoBehaviour
 
     private void Start()
     {
-        foreach (var upgrade in upgrades)
+        foreach (Upgrades upgrade in upgrades)
         {
-            upgrade.nameText.text = upgrade.titles[0];
+            upgrade.nameText.text = upgrade.descriptions[0];
         }
     }
 
@@ -47,43 +56,42 @@ public class Shop : MonoBehaviour
     {
         for (int i = 0; i < upgrades.Length; i++)
         {
-            upgrades[i].nameText.text = upgrades[i].titles[upgrades[i].curerntLevel];
-            upgrades[i].levelText.text = upgrades[i].curerntLevel.ToString();
+            upgrades[i].nameText.text = upgrades[i].title + " " + upgrades[i].descriptions[upgrades[i].currentLevel];
+            upgrades[i].levelText.text = upgrades[i].currentLevel.ToString();
 
-            if (upgrades[i].curerntLevel < upgrades[i].maxLevel)
+            if (upgrades[i].currentLevel >= upgrades[i].maxLevel)
             {
-                Abreviate();
+                upgrades[i].priceText.text = "MAX";
+                upgrades[i].priceText.color = maxColor;
             }
-            else 
+            else
             {
-                upgrades[i].priceText.text = string.Empty;
+                Abreviate(i);
+                upgrades[i].priceText.color = canAffordColor;
             }
         }
     }
 
     public void BuyUpgrade(int upgradeNumber)
     {
-        if (upgrades[upgradeNumber].curerntLevel >= upgrades[upgradeNumber].maxLevel) { return; }
+        if (upgrades[upgradeNumber].currentLevel == upgrades[upgradeNumber].maxLevel) { return; }
 
+        upgrades[upgradeNumber].currentLevel++;
         upgrades[upgradeNumber].price *= upgrades[upgradeNumber].priceMultiplier;
-        upgrades[upgradeNumber].curerntLevel++;
     }
 
-    private void Abreviate()
+    private void Abreviate(int upgradeNumber)
     {
-        for (int i = 0; i < upgrades.Length; i++) 
+        string[] units = { "", "K", "M", "B", "T", "QA", "QI" };
+        double amount = upgrades[upgradeNumber].price;
+        int unitIndex = 0;
+
+        while (amount >= 1000 && unitIndex < units.Length - 1)
         {
-            string[] units = { "", "K", "M", "B", "T", "QA", "QI"};
-            double amount = upgrades[i].price;
-            int unitIndex = 0;
-
-            while (amount >= 1000 && unitIndex < units.Length - 1)
-            {
-                amount /= 1000;
-                unitIndex++;
-            }
-
-            upgrades[i].priceText.text = amount.ToString("F1") + units[unitIndex];
+            amount /= 1000;
+            unitIndex++;
         }
+
+        upgrades[upgradeNumber].priceText.text = amount.ToString("F1") + units[unitIndex];
     }
 }
