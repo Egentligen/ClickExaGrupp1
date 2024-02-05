@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ClickPopup : MonoBehaviour
+public class Popup : MonoBehaviour
 {
     [SerializeField] GameObject clickPopup;
     public void SpawnClickPupup(long moneyPerClick)

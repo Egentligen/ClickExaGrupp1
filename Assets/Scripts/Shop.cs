@@ -6,13 +6,20 @@ using System;
 
 public class Shop : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI scorePerSecondText;
+
     [Header("Colors")]
     [SerializeField] Color maxColor = Color.black;
     [SerializeField] Color toExpenciveColor = Color.red;
     [SerializeField] Color canAffordColor = Color.green;
 
-    [Header("Upgrades")]
     [SerializeField] Upgrades[] upgrades;
+
+    BombClicker bombClicker;
+
+    private float timer = 1;
+    private float timerAtStart;
+    private long scoreToAdd;
 
     [System.Serializable]
 
@@ -31,54 +38,106 @@ public class Shop : MonoBehaviour
         public int maxLevel;
         public int currentLevel;
 
+        public bool useDescriptions;
+
+        public long scorePerSecond;
+
         [Space]
 
         public TextMeshProUGUI priceText;
         public TextMeshProUGUI nameText;
         public TextMeshProUGUI levelText;
+    }
 
+    private void Awake()
+    {
+        bombClicker = FindObjectOfType<BombClicker>();
+
+        timerAtStart = timer;
     }
 
     private void Start()
     {
         foreach (Upgrades upgrade in upgrades)
         {
-            upgrade.nameText.text = upgrade.descriptions[0];
+            if (upgrade.useDescriptions)
+            {
+                upgrade.nameText.text = upgrade.descriptions[0];
+            }
         }
     }
 
     private void Update()
     {
         UpdateShop();
+        Towers();
     }
 
     private void UpdateShop()
     {
         for (int i = 0; i < upgrades.Length; i++)
         {
-            upgrades[i].nameText.text = upgrades[i].title + " " + upgrades[i].descriptions[upgrades[i].currentLevel];
-            upgrades[i].levelText.text = upgrades[i].currentLevel.ToString();
+            Upgrades upgrade = upgrades[i];
 
-            if (upgrades[i].currentLevel >= upgrades[i].maxLevel)
+            if (upgrade.useDescriptions) 
             {
-                upgrades[i].priceText.text = "MAX";
-                upgrades[i].priceText.color = maxColor;
+                upgrade.nameText.text = upgrade.title + ":\n" + upgrade.descriptions[upgrade.currentLevel];
+            }
+            if (!upgrade.useDescriptions)
+            {
+                upgrade.nameText.text = upgrade.title;
+            }
+
+
+            upgrade.levelText.text = upgrade.currentLevel.ToString();
+
+            if (upgrade.currentLevel >= upgrade.maxLevel)
+            {
+                upgrade.priceText.text = "MAX";
+                upgrade.priceText.color = maxColor;
             }
             else
             {
+                upgrade.priceText.color = bombClicker.GetScore() < upgrade.price ? toExpenciveColor : canAffordColor;
+
                 Abreviate(i);
-                upgrades[i].priceText.color = canAffordColor;
             }
+        }
+    }
+
+    private void Towers() 
+    {
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
+        else
+        {
+            scoreToAdd = 0;
+            timer = timerAtStart;
+
+            foreach (var upgrade in upgrades)
+            {
+                for (int i = 0; i < upgrade.currentLevel; i++)
+                {
+                    scoreToAdd += upgrade.scorePerSecond;
+                }
+            }
+
+            scorePerSecondText.text = scoreToAdd.ToString();
+            bombClicker.AddScore(scoreToAdd);
         }
     }
 
     public void BuyUpgrade(int upgradeNumber)
     {
-        if (upgrades[upgradeNumber].currentLevel == upgrades[upgradeNumber].maxLevel) { return; }
+        if (upgrades[upgradeNumber].currentLevel == upgrades[upgradeNumber].maxLevel 
+            || bombClicker.GetScore() < upgrades[upgradeNumber].price) { return; }
 
+        bombClicker.AddScore(-upgrades[upgradeNumber].price);
         upgrades[upgradeNumber].currentLevel++;
         upgrades[upgradeNumber].price *= upgrades[upgradeNumber].priceMultiplier;
-    }
+    } 
 
     private void Abreviate(int upgradeNumber)
     {
@@ -92,6 +151,13 @@ public class Shop : MonoBehaviour
             unitIndex++;
         }
 
-        upgrades[upgradeNumber].priceText.text = amount.ToString("F1") + units[unitIndex];
+        if (upgrades[upgradeNumber].price > 9999)
+        {
+            upgrades[upgradeNumber].priceText.text = amount.ToString("0.###") + units[unitIndex];
+        }
+        else
+        {
+            upgrades[upgradeNumber].priceText.text = amount + units[unitIndex];
+        }
     }
 }

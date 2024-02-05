@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8406859988676966047}
   - component: {fileID: 6236040468904841575}
   m_Layer: 0
-  m_Name: ClickPopup
+  m_Name: MoneyPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
