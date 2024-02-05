@@ -440,36 +440,33 @@ MonoBehaviour:
   toExpenciveColor: {r: 1, g: 0, b: 0, a: 1}
   canAffordColor: {r: 0, g: 1, b: 0, a: 1}
   upgrades:
-  - upgradeAmount: 17.9
-    title: Bomb Area
+  - title: Bomb Area
     descriptions:
     - Big Bombs
     - Bigger Bombs
     - Biggest Bomb
     - 
-    price: 10
+    price: 0
     priceMultiplier: 5
     maxLevel: 3
     currentLevel: 0
     useDescriptions: 1
-    scorePerSecond: 10
+    scorePerSecond: 0
     priceText: {fileID: 211322801}
     nameText: {fileID: 272040454}
     levelText: {fileID: 825195129}
-  - upgradeAmount: 1
-    title: Airplane
+  - title: Airplane
     descriptions: []
     price: 25743
     priceMultiplier: 5
     maxLevel: 10
     currentLevel: 0
     useDescriptions: 0
-    scorePerSecond: 0
+    scorePerSecond: 100
     priceText: {fileID: 1892224058}
     nameText: {fileID: 446766696}
     levelText: {fileID: 1618768142}
-  - upgradeAmount: 2
-    title: New Location
+  - title: New Location
     descriptions:
     - USA
     - Europe
@@ -479,12 +476,12 @@ MonoBehaviour:
     - China
     - Polarbears
     - 
-    price: 25000
+    price: 0
     priceMultiplier: 5
     maxLevel: 7
     currentLevel: 0
     useDescriptions: 1
-    scorePerSecond: 100
+    scorePerSecond: 0
     priceText: {fileID: 52811301}
     nameText: {fileID: 2127495723}
     levelText: {fileID: 34441724}
@@ -766,7 +763,6 @@ GameObject:
   m_Component:
   - component: {fileID: 277842594}
   - component: {fileID: 277842595}
-  - component: {fileID: 277842596}
   m_Layer: 0
   m_Name: ClickManager
   m_TagString: Untagged
@@ -805,18 +801,7 @@ MonoBehaviour:
   bombButton: {fileID: 1193902868}
   clickedSprite: {fileID: 21300000, guid: f6a60cb5a4a61a44fab2819dc786e86f, type: 3}
   defaultSprite: {fileID: 21300000, guid: 4a1cfa8794f2311439f3bbb1643b9ec2, type: 3}
---- !u!114 &277842596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 277842593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 845fdbe3c5a5d98468760ce12815643d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  clickMultiplier: 0
 --- !u!1 &446766694
 GameObject:
   m_ObjectHideFlags: 0
@@ -2137,6 +2122,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 53674517}
+        m_TargetAssemblyTypeName: Shop, Assembly-CSharp
+        m_MethodName: NewBombArea
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1251082260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2175,6 +2172,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251082257}
   m_CullTransparentMesh: 1
+--- !u!1 &1313980713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1313980716}
+  - component: {fileID: 1313980714}
+  m_Layer: 0
+  m_Name: MapManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1313980714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313980713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee026bff53b777f448b42c0e6491efed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  locations:
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  - {x: 3, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 0, y: 3}
+  - {x: 4, y: 0}
+  - {x: 4, y: 1}
+  explotion: {fileID: 6526326060744715202, guid: 018b2f7c492794d45ab22ec60c20344d, type: 3}
+--- !u!4 &1313980716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313980713}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.5334904, y: 0.770591, z: 0.19997519}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1327175006
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,6 +3036,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1313980714}
+        m_TargetAssemblyTypeName: Locations, Assembly-CSharp
+        m_MethodName: SetNewLocation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1989628187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3301,3 +3364,4 @@ SceneRoots:
   - {fileID: 53674516}
   - {fileID: 1915269813}
   - {fileID: 277842594}
+  - {fileID: 1313980716}

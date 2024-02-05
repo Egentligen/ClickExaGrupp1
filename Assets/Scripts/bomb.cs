@@ -8,9 +8,15 @@ public class BombClicker : MonoBehaviour
     public Button bombButton;
     public Sprite clickedSprite;
     public Sprite defaultSprite;
+    public int clickMultiplier;
 
     private long score = 0;
     private long scoreOnClick = 1;
+
+    public int GetClickMultiplier() 
+    { 
+        return clickMultiplier;
+    }
 
     public long GetScore() 
     { 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Linq;
 
 public class Shop : MonoBehaviour
 {
@@ -20,15 +21,12 @@ public class Shop : MonoBehaviour
     private float timer = 1;
     private float timerAtStart;
     private long scoreToAdd;
+    private int scorePerSecondMultiplier;
 
     [System.Serializable]
 
     public struct Upgrades
     {
-        public float upgradeAmount;
-
-        [Space]
-
         public string title;
         public string[] descriptions;
 
@@ -47,6 +45,11 @@ public class Shop : MonoBehaviour
         public TextMeshProUGUI priceText;
         public TextMeshProUGUI nameText;
         public TextMeshProUGUI levelText;
+    }
+
+    public int GetBombAreaLevel() 
+    {
+        return upgrades[1].currentLevel;
     }
 
     private void Awake()
@@ -131,13 +134,23 @@ public class Shop : MonoBehaviour
 
     public void BuyUpgrade(int upgradeNumber)
     {
-        if (upgrades[upgradeNumber].currentLevel == upgrades[upgradeNumber].maxLevel 
+        if (upgrades[upgradeNumber].currentLevel >= upgrades[upgradeNumber].maxLevel 
             || bombClicker.GetScore() < upgrades[upgradeNumber].price) { return; }
 
         bombClicker.AddScore(-upgrades[upgradeNumber].price);
         upgrades[upgradeNumber].currentLevel++;
         upgrades[upgradeNumber].price *= upgrades[upgradeNumber].priceMultiplier;
-    } 
+    }
+    
+    public void UpgradeBomb() 
+    { 
+        List<Explotion> explotionList = FindObjectsOfType<Explotion>().ToList();
+
+        foreach (Explotion explotion in explotionList) 
+        { 
+            explotion.UpgradeBombArea(upgrades[2].currentLevel);
+        }
+    }
 
     private void Abreviate(int upgradeNumber)
     {
